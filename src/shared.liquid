@@ -1,0 +1,101 @@
+{% comment %}
+  One body for every view: wide slots (800 px) show the channel, the main programme and the next one side by side;
+  narrow slots (400 and 480 px) put the second programme on a small line under the first. A view caps the number
+  of rows with a tv--max-N class. Solid black only: gray text breaks up on black-and-white screens.
+{% endcomment %}
+{% if mode == "tonight" %}
+  {% assign tv_then = "Puis" %}
+{% else %}
+  {% assign tv_then = "Ensuite" %}
+{% endif %}
+
+{% capture tv_body %}
+  {% if rows.size > 0 %}
+    <div class="tv-rows">
+      {% for row in rows %}
+        <div class="tv-row">
+          <div class="tv-name">{{ row.name }}</div>
+          {% if row.a %}
+            <div class="tv-slot tv-slot--a">
+              <div class="tv-title"><span class="tv-time">{{ row.a.start }}</span> {{ row.a.title }}</div>
+              <div class="tv-meta">
+                {% if row.a.progress != nil %}
+                  <span class="tv-bar"><span style="width:{{ row.a.progress }}%"></span></span>
+                  <span>jusqu’à {{ row.a.end }}</span>
+                {% else %}
+                  <span>{{ row.a.category }}</span>
+                {% endif %}
+              </div>
+            </div>
+          {% else %}
+            <div class="tv-slot tv-slot--a"><div class="tv-title">—</div></div>
+          {% endif %}
+          <div class="tv-slot tv-slot--b">
+            {% if row.b %}
+              <div class="tv-title"><span class="tv-then">{{ tv_then }} </span><span class="tv-time">{{ row.b.start }}</span> {{ row.b.title }}</div>
+              <div class="tv-meta"><span>{{ row.b.category }}</span></div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="tv-empty">
+      <p class="tv-empty__title">Programme indisponible</p>
+      <p class="tv-empty__text">Le guide des programmes n’a pas répondu. Nouvel essai à la prochaine actualisation.</p>
+    </div>
+  {% endif %}
+{% endcapture %}
+
+{% capture tv_title_bar %}
+  <div class="title_bar">
+    <span class="title">{{ heading | default: "Programme TV" }}</span>
+    <span class="instance">{{ date }}</span>
+  </div>
+{% endcapture %}
+
+<style>
+  .tv{container-type:size;width:100%;height:100%;box-sizing:border-box;padding:4px 10px 0;
+    font-family:'Inter Variable',Inter,sans-serif;
+    font-size:clamp(14px,2.2cqw,17px)}
+  .tv-rows{height:100%;display:flex;flex-direction:column}
+  .tv-row{flex:1 1 0;min-height:0;display:grid;grid-template-columns:7.5em 1fr 1fr;column-gap:14px;align-items:center;
+    border-bottom:1px solid currentColor;overflow:hidden}
+  .tv-row:last-child{border-bottom:0}
+  .tv-name{font-weight:700;font-size:.9em;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tv-slot{min-width:0}
+  .tv-title,.tv-meta{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tv-title{font-size:1em;line-height:1.25;font-weight:600}
+  .tv-slot--b .tv-title{font-weight:500}
+  .tv-time{font-weight:700;font-variant-numeric:tabular-nums}
+  .tv-then{display:none}
+  .tv-meta{display:flex;align-items:center;gap:6px;font-size:.78em;line-height:1.3;font-weight:500}
+  .tv-bar{flex:0 0 4em;height:7px;border:1.5px solid currentColor;border-radius:4px;overflow:hidden}
+  .tv-bar span{display:block;height:100%;background:currentColor}
+
+  /* Narrow slots: channel above or beside, the next programme as a small second line. */
+  @container (max-width: 520px){
+    .tv{font-size:clamp(13px,4cqw,16px)}
+    .tv-row{grid-template-columns:5.6em 1fr;grid-template-rows:auto auto;align-content:center;row-gap:1px}
+    .tv-name{grid-row:span 2}
+    .tv-slot--a .tv-meta{display:none}
+    .tv-slot--b .tv-meta{display:none}
+    .tv-slot--b .tv-title{font-size:.85em}
+    .tv-then{display:inline}
+  }
+  /* Short rows (many channels, or half_horizontal and quadrant): drop the category line. */
+  @container (max-height: 260px){
+    .tv-meta{display:none}
+  }
+
+  .tv--max4 .tv-row:nth-child(n+5),.tv--max5 .tv-row:nth-child(n+6),.tv--max9 .tv-row:nth-child(n+10),
+  .tv--max10 .tv-row:nth-child(n+11){display:none}
+  .tv--max4 .tv-row:nth-child(4),.tv--max5 .tv-row:nth-child(5),.tv--max9 .tv-row:nth-child(9),
+  .tv--max10 .tv-row:nth-child(10){border-bottom:0}
+
+  .tv-empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+    text-align:center;padding:0 8%}
+  .tv-empty p{margin:0}
+  .tv-empty__title{font-size:clamp(17px,6.5cqmin,34px);font-weight:600}
+  .tv-empty__text{font-size:clamp(13px,3.8cqmin,20px);font-weight:500;max-width:30em}
+</style>

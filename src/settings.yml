@@ -1,0 +1,426 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+framework_version: latest
+serverless_language: python
+# One file per chosen channel (10 at most), written by the relay (relay/build.py) every 3 hours on GitHub Pages.
+polling_url: "{%- assign tv_ids = channels | join: \",\" | split: \",\" -%}{%- if tv_ids.size == 0 -%}{%- assign tv_ids = \"TF1.fr,France2.fr,France3.fr,CanalPlus.fr,France5.fr,M6.fr,Arte.fr\" | split: \",\" -%}{%- endif -%}{% capture tv_nl %}\r\n{% endcapture %}{%- for tv_id in tv_ids limit: 10 -%}{%- unless forloop.first -%}{{ tv_nl }}{%- endunless -%}https://rivallinkil.github.io/trmnl-tv-schedule/c/{{ tv_id | strip }}.json{%- endfor -%}"
+polling_headers: ''
+custom_fields:
+- keyname: channels
+  field_type: select
+  multiple: true
+  name: Chaînes
+  description: Les chaînes à afficher (environ 400 chaînes accessibles en France, la TNT en premier), affichées dans l'ordre de cette liste. Sans choix, TF1, France 2, France 3, Canal+, France 5, M6 et Arte. L'écran complet en montre 10 au plus, la moitié verticale 9, la moitié horizontale 5 et le quart 4.
+  optional: true
+  options:
+  - 'TF1': TF1.fr
+  - 'France 2': France2.fr
+  - 'France 3': France3.fr
+  - 'Canal+': CanalPlus.fr
+  - 'France 5': France5.fr
+  - 'M6': M6.fr
+  - 'Arte': Arte.fr
+  - 'W9': W9.fr
+  - 'TMC': TMC.fr
+  - 'TFX': NT1.fr
+  - 'LCP': LaChaineParlementaire.fr
+  - 'France 4': France4.fr
+  - 'BFM TV': BFMTV.fr
+  - 'CNews': CNews.fr
+  - 'CStar': CStar.fr
+  - 'Gulli': Gulli.fr
+  - 'T18': T18.fr
+  - 'NOVO19': NOVO19.fr
+  - 'TF1 Séries Films': TF1SeriesFilms.fr
+  - 'L''Équipe': LEquipe21.fr
+  - '6ter': 6ter.fr
+  - 'RMC Story': Numero23.fr
+  - 'RMC Découverte': RMCDecouverte.fr
+  - 'RMC Life': Cherie25.fr
+  - 'LCI': LCI.fr
+  - 'franceinfo': FranceInfo.fr
+  - 'Paris Première': ParisPremiere.fr
+  - 'Canal+ Sport': CanalPlusSport.fr
+  - 'Canal+ Cinéma': CanalPlusCinema.fr
+  - 'Planète+': PlanetePlus.fr
+  - '13ème rue': 13eRue.fr
+  - '20 Minutes TV': IDF1.fr
+  - '2M Maroc': 2MMonde.fr
+  - '7 A LIMOGES': 7ALimoges.fr
+  - '8 Mont Blanc': 8MontBlanc.fr
+  - 'AB1': AB1.fr
+  - 'AB3': AB3.fr
+  - 'ABX': ABXploreFR.fr
+  - 'Action': Action.fr
+  - 'Adult Swim': AdultSwim.fr
+  - 'Angers télé': AngersTele.fr
+  - 'Animaux': Animaux.fr
+  - 'ANTENNE REUNION': AntenneReunion.fr
+  - 'Antenne Réunion Radio': AntenneReunionRadio.fr
+  - 'Arte Belgique': Arte.be
+  - 'Astrocenter TV': AstroCenter.fr
+  - 'ATVGuadeloupe': ATVGuadeloupe.fr
+  - 'ATVGuyane': ATVGuyane.fr
+  - 'ATVMartinique': ATVMartinique.fr
+  - 'Auto Plus TV': AutoPlusTV.fr
+  - 'Automoto la chaine': ABMoteurs.fr
+  - 'BabyTV': BabyTV.fr
+  - 'BBlack': BBlack.fr
+  - 'BBLACK Africa': BBlackAfrica.fr
+  - 'BBLACK Caribbean': BBlackCaribbean.fr
+  - 'BBLACK Classik': BBlackClassik.fr
+  - 'beIN SPORTS 1': beINSPORTS1.fr
+  - 'beIN SPORTS 2': beINSPORTS2.fr
+  - 'beIN SPORTS 3': beINSPORTS3.fr
+  - 'beIN SPORTS MAX 10': beINSPORTSMAX10.fr
+  - 'beIN SPORTS MAX 4': beINSPORTSMAX4.fr
+  - 'beIN SPORTS MAX 5': beINSPORTSMAX5.fr
+  - 'beIN SPORTS MAX 6': beINSPORTSMAX6.fr
+  - 'beIN SPORTS MAX 7': beINSPORTSMAX7.fr
+  - 'beIN SPORTS MAX 8': beINSPORTSMAX8.fr
+  - 'beIN SPORTS MAX 9': beINSPORTSMAX9.fr
+  - 'Bel RTL': BelRTL.be
+  - 'BFM ALSACE': Alsace20.fr
+  - 'BFM Business': BFMBusiness.fr
+  - 'BFM DICI ALPES DU SUD': DiciTvAlpes.fr
+  - 'BFM DICI HAUTE-PROVENCE': DiciTvProvence.fr
+  - 'BFM Grand Lille': BFMGrandLille.fr
+  - 'BFM Grand Littoral': BFMGrandLittoral.fr
+  - 'BFM Lyon': TeleLyonMetropole.fr
+  - 'BFM MARSEILLE PROVENCE': ProvenceAzur.fr
+  - 'BFM NICE COTE D''AZUR': AzurTV.fr
+  - 'BFM NORMANDIE': LaChaineNormande.fr
+  - 'BFM TOULON VAR': VarAzur.fr
+  - 'BIP TV': BipTV.fr
+  - 'Boomerang': Boomerang.fr
+  - 'Boomerang +1': Boomerangplus1.fr
+  - 'Bravo': EEntertainment.fr
+  - 'Brazzers TV': BrazzersTV.fr
+  - 'BRF': BRF.be
+  - 'BRFTV': BRFTV.ne
+  - 'Canal 21': Canal21.fr
+  - 'Canal 32': Canal32.fr
+  - 'CANAL J': CanalJ.fr
+  - 'Canal Partagé TNT IDF': CanalpartageTNTIDF.fr
+  - 'CANAL+ BOX OFFICE': CanalPlusBoxOffice.fr
+  - 'Canal+ Docs': CanalPlusDocs.fr
+  - 'Canal+ Foot': CanalPlusFoot.fr
+  - 'Canal+ Grand Ecran': CanalPlusGrandEcran.fr
+  - 'Canal+ Kids': CanalPlusKIDS.fr
+  - 'CANAL+ Ligue 1 Uber Eats': CanalPlusLigue1.fr
+  - 'Canal+ Live 1': CanalPlusLive1.fr
+  - 'Canal+ Live 10': CanalPlusLive10.fr
+  - 'Canal+ Live 11': CanalPlusLive11.fr
+  - 'Canal+ Live 12': CanalPlusLive12.fr
+  - 'Canal+ Live 13': CanalPlusLive13.fr
+  - 'Canal+ Live 14': CanalPlusLive14.fr
+  - 'Canal+ Live 15': CanalPlusLive15.fr
+  - 'Canal+ Live 16': CanalPlusLive16.fr
+  - 'Canal+ Live 17': CanalPlusLive17.fr
+  - 'Canal+ Live 18': CanalPlusLive18.fr
+  - 'Canal+ Live 19': CanalPlusLive19.fr
+  - 'Canal+ Live 2': CanalPlusLive2.fr
+  - 'Canal+ Live 3': CanalPlusLive3.fr
+  - 'Canal+ Live 4': CanalPlusLive4.fr
+  - 'Canal+ Live 5': CanalPlusLive5.fr
+  - 'Canal+ Live 6': CanalPlusLive6.fr
+  - 'Canal+ Live 7': CanalPlusLive7.fr
+  - 'Canal+ Live 8': CanalPlusLive8.fr
+  - 'Canal+ Live 9': CanalPlusLive9.fr
+  - 'Canal+ Premier League': CanalPlusPremierLeague.fr
+  - 'Canal+ Series': CanalPlusSeries.fr
+  - 'Canal+ Sport 360': CanalPlusSport360.fr
+  - 'Canal9': Canal9.fr
+  - 'Canvas': Canvas.fr
+  - 'CARAC 1 HD': RougeTV.ch
+  - 'Cartoon Network': CartoonNetwork.fr
+  - 'Cartoonito': Boing.fr
+  - 'CGTN': CGTN.fr
+  - 'Chaine Evenement': ChaineEvenement.fr
+  - 'Chasse et Pêche': ChasseEtPeche.fr
+  - 'Cheval TV': ChevalTV.fr
+  - 'Ciné Western': CineWestern.fr
+  - 'Ciné+ Classic': CinePlusClassic.fr
+  - 'Ciné+ Emotion': CinePlusEmotion.fr
+  - 'Ciné+ Family': CinePlusFamiz.fr
+  - 'Ciné+ Festival': CinePlusClub.fr
+  - 'Ciné+ Frisson': CinePlusFrisson.fr
+  - 'Club RTL': ClubRTL.be
+  - 'ClubbingTV': ClubbingTV.fr
+  - 'CNews Prime': CNewsPrime.fr
+  - 'Comedie+': ComediePlus.fr
+  - 'Comedy Central': ComedyCentral.fr
+  - 'Crime District': CrimeDistrict.fr
+  - 'CStar Hits France': CStarHitsFrance.fr
+  - 'DAZN 1': DAZN.fr
+  - 'DemainTV': DemainTV.fr
+  - 'Discovery Channel': DiscoveryChannel.fr
+  - 'Discovery Investigation': DiscoveryInvestigation.fr
+  - 'Disney Channel': DisneyChannel.fr
+  - 'Disney Channel +1': DisneyChannelPlus1.fr
+  - 'Disney Cinema': DisneyCinema.fr
+  - 'Disney Junior': DisneyJunior.fr
+  - 'Disney XD': DisneyXD.fr
+  - 'Disney+': DisneyPlus.fr
+  - 'Dog & Cat TV': DogCatTV.fr
+  - 'DorcelTV': DorcelTV.fr
+  - 'DorcelXXX': DorcelXXX.fr
+  - 'ElleGirl': ElleGirl.fr
+  - 'Equidia': Equidia.fr
+  - 'Eurochannel': Eurochannel.fr
+  - 'Euronews': Euronews.fr
+  - 'Europe 1 TV': Europe1TV.fr
+  - 'Eurosport 1': Eurosport1.fr
+  - 'Eurosport 2': Eurosport2.fr
+  - 'Eurosport 360 - 1': Eurosport3601.fr
+  - 'Eurosport 360 - 2': Eurosport3602.fr
+  - 'Eurosport 360 - 3': Eurosport3603.fr
+  - 'Eurosport 360 - 4': Eurosport3604.fr
+  - 'Eurosport 360 - 5': Eurosport3605.fr
+  - 'Eurosport 360 - 6': Eurosport3606.fr
+  - 'Eurosport 360 - 7': Eurosport3607.fr
+  - 'Eurosport 360 - 8': Eurosport3608.fr
+  - 'EUROSPORT 360 10': Eurosport36010.fr
+  - 'EUROSPORT 360 11': Eurosport36011.fr
+  - 'EUROSPORT 360 12': Eurosport36012.fr
+  - 'EUROSPORT 360 13': Eurosport36013.fr
+  - 'EUROSPORT 360 14': Eurosport36014.fr
+  - 'EUROSPORT 360 15': Eurosport36015.fr
+  - 'EUROSPORT 360 16': Eurosport36016.fr
+  - 'EUROSPORT 360 17': Eurosport36017.fr
+  - 'EUROSPORT 360 18': Eurosport36018.fr
+  - 'EUROSPORT 360 19': Eurosport36019.fr
+  - 'EUROSPORT 360 20': Eurosport36020.fr
+  - 'EUROSPORT 360 21': Eurosport36021.fr
+  - 'EUROSPORT 360 22': Eurosport36022.fr
+  - 'EUROSPORT 360 23': Eurosport36023.fr
+  - 'EUROSPORT 360 24': Eurosport36024.fr
+  - 'EUROSPORT 360 25': Eurosport36025.fr
+  - 'EUROSPORT 360 26': Eurosport36026.fr
+  - 'EUROSPORT 360 27': Eurosport36027.fr
+  - 'EUROSPORT 360 28': Eurosport36028.fr
+  - 'EUROSPORT 360 29': Eurosport36029.fr
+  - 'EUROSPORT 360 30': Eurosport36030.fr
+  - 'EUROSPORT 360 31': Eurosport36031.fr
+  - 'EUROSPORT 360 32': Eurosport36032.fr
+  - 'EUROSPORT 360 9': Eurosport3609.fr
+  - 'Evenements Sports 4K UHD': EvenementsSports4KUHD.fr
+  - 'Exo TV': ExoTV.fr
+  - 'Fashion TV': FashionTV.fr
+  - 'Festival': Festival.be
+  - 'Fight Sports': FightSports.fr
+  - 'France 24': France24.fr
+  - 'France 3 - Alpes': France3Alpes.fr
+  - 'France 3 - Alsace': France3Alsace.fr
+  - 'France 3 - Aquitaine': France3Aquitaine.fr
+  - 'France 3 - Auvergne': France3Auvergne.fr
+  - 'France 3 - Basse-Normandie': France3BasseNormandie.fr
+  - 'France 3 - Bourgogne': France3Bourgogne.fr
+  - 'France 3 - Bretagne': France3Bretagne.fr
+  - 'France 3 - Centre': France3Centre.fr
+  - 'France 3 - Champagne-Ardenne': France3ChampagneArdenne.fr
+  - 'France 3 - Corse': France3CorseViaStella.fr
+  - 'France 3 - Côte d''Azur': France3CotedAzur.fr
+  - 'France 3 - Franche-Comté': France3FrancheComte.fr
+  - 'France 3 - Haute-Normandie': France3HauteNormandie.fr
+  - 'France 3 - Languedoc': France3Languedoc.fr
+  - 'France 3 - Limousin': France3Limousin.fr
+  - 'France 3 - Lorraine': France3Lorraine.fr
+  - 'France 3 - Midi-Pyrénées': France3MidiPyrenees.fr
+  - 'France 3 - Nord Pas-de-Calais': France3NordPasDeCalais.fr
+  - 'France 3 - Paris Ile-de-France': France3ParisIdF.fr
+  - 'France 3 - Pays de Loire': France3PaysDeLaLoire.fr
+  - 'France 3 - Picardie': France3Picardie.fr
+  - 'France 3 - Poitou-Charentes': France3PoitouCharentes.fr
+  - 'France 3 - Provence Alpes': France3ProvenceAlpes.fr
+  - 'France 3 - Rhône-Alpes': France3RhoneAlpes.fr
+  - 'France 3 Nouvelle Aquitaine': France3NouvelleAquitaine.fr
+  - 'France TV Docs': FranceTVDocs.fr
+  - 'France TV S&eacute;ries': FranceTVSeries.fr
+  - 'Fuel TV': FuelTV.fr
+  - 'Ginx': Ginx.fr
+  - 'Golf+': GolfPlus.fr
+  - 'Gong': Gong.fr
+  - 'GongMax': GongMax.fr
+  - 'Histoire': Histoire.fr
+  - 'i24 news': I24news.fr
+  - 'IL TV': ILTV.fr
+  - 'INA': INA70s.fr
+  - 'Infosport+': InfosportPlus.fr
+  - 'KTO': KTO.fr
+  - 'La chaine du Père Noël': PereNoel.fr
+  - 'La Chaîne Météo': LaChaineMeteo.fr
+  - 'La Trois': LaTrois.be
+  - 'La Une': LaUne.be
+  - 'Le Figaro TV': ViaGrandParis.fr
+  - 'Ligue 1+': Ligue1Plus.fr
+  - 'Ligue 1+ 10': Ligue1Plus10.fr
+  - 'Ligue 1+ 2': Ligue1Plus2.fr
+  - 'Ligue 1+ 3': Ligue1Plus3.fr
+  - 'Ligue 1+ 4': Ligue1Plus4.fr
+  - 'Ligue 1+ 5': Ligue1Plus5.fr
+  - 'Ligue 1+ 6': Ligue1Plus6.fr
+  - 'Ligue 1+ 7': Ligue1Plus7.fr
+  - 'Ligue 1+ 8': Ligue1Plus8.fr
+  - 'Ligue 1+ 9': Ligue1Plus9.fr
+  - 'LMtv Sarthe': LMTVSarthe.fr
+  - 'Lucky Jack': LuckyJack.fr
+  - 'Luxe TV': LuxeTV.fr
+  - 'Lyon Capitale TV': LyonTV.fr
+  - 'M6 4K': M64K.fr
+  - 'M6 Music': M6Music.fr
+  - 'Maison & Travaux': MaisonEtTravaux.fr
+  - 'Mangas': Mangas.fr
+  - 'ManX': ManX.fr
+  - 'Maritima TV': MaritimaTV.fr
+  - 'Marmiton TV': MarmitonTV.fr
+  - 'MaTele': MaTele.be
+  - 'MAURIENNE TV': MaurienneTV.fr
+  - 'MCM': MCM.fr
+  - 'MCM Top': MCMTop.fr
+  - 'MELODY TV': Melody.fr
+  - 'Men''s Up TV': MensUpTV.fr
+  - 'Mezzo': Mezzo.fr
+  - 'Mezzo Live HD': MezzoLive.fr
+  - 'MFMTV': MFMTV.fr
+  - 'MGG TV': ES1.fr
+  - 'MIEUX': Mieux.fr
+  - 'MoliereTV': MoliereTV.af
+  - 'MosaikCristal': MosaikCristal.fr
+  - 'Mosaïk Cristal': Mosaik.fr
+  - 'MotorVision TV': MotorVisionTV.fr
+  - 'MTV': MTV.fr
+  - 'MTV Rocks': MTVRocks.fr
+  - 'MUSEUM TV': Museum.fr
+  - 'My Zen TV': MyZenTV.fr
+  - 'NA TV': NATV.fr
+  - 'Nat Geo Wild': NatGeoWild.fr
+  - 'National Geographic': NationalGeographic.fr
+  - 'Nautical Channel': NauticalChannel.fr
+  - 'Nickelodeon': Nickelodeon.fr
+  - 'Nickelodeon +1': NickelodeonPlus1.fr
+  - 'Nickelodeon Junior': NickelodeonJunior.fr
+  - 'Nickelodeon Teen': Nickelodeon4Teen.fr
+  - 'Nickelodeon+1': Nickelodeonplus1.fr
+  - 'Nina Novelas': NinaNovelas.fr
+  - 'Nollywood TV': NollywoodTV.fr
+  - 'NOVELAS': NovelasTV.fr
+  - 'NRJ Hits': NRJHits.fr
+  - 'OCS': CinePlusPremier.fr
+  - 'OLPLAY': OLTV.fr
+  - 'OlympiaTV': OlympiaTV.fr
+  - 'OM5TV': OM5TV.fr
+  - 'PinkTV': PinkTV.fr
+  - 'Piwi+': PIWI.fr
+  - 'Planete+ Aventure': PlaneteAction.fr
+  - 'Planète+ Crime Investigation': PLANETEJustice.fr
+  - 'Playboy TV': PlayboyTV.fr
+  - 'Plug RTL': PlugRTL.be
+  - 'Polar+': PolarPlus.fr
+  - 'RFM TV': RFMTV.fr
+  - 'RMC Sport 1': RMCSport1.fr
+  - 'RMC Sport 2': RMCSport2.fr
+  - 'RMC Sport Access': RMCSportAccess1.fr
+  - 'RMC Sport Live 3': RMCSport3.fr
+  - 'RMC Sport UHD': RMCSportUHD.fr
+  - 'RMCSport4': RMCSport4.fr
+  - 'RTL TVI': RTLTVI.be
+  - 'RTL9': RTL9.fr
+  - 'RTS 1': RTSUn.ch
+  - 'RTS 2': RTSDeux.ch
+  - 'Science et Vie TV': ScienceEtVieTV.fr
+  - 'SciFi': Syfy.fr
+  - 'Seasons': Seasons.fr
+  - 'SERIE CLUB': serieclub.fr
+  - 'Sony One Favoris': SonyOneFavoris.fr
+  - 'Sony One Hits Action': SonyOneHitsAction.fr
+  - 'Sony One Hits Comédie': SonyOneHitsComedy.fr
+  - 'Sony One Séries Comédie': SonyOneSeriesComedy.fr
+  - 'Sony One Séries Thriller': SonyOneSeriesThriller.fr
+  - 'Souvenirs From Earth': SouvenirsFromEarth.fr
+  - 'Sport en France': SportEnFrance.fr
+  - 'Sport+': SportPlus.fr
+  - 'Stingray Classica': StingrayClassica.fr
+  - 'Stingray Djazz': StingrayDjazz.fr
+  - 'Stingray Festival': StingrayFestival.fr
+  - 'Stingray iConcerts': StingrayiConcerts.fr
+  - 'Sundance TV': SundanceTV.fr
+  - 'TCM Cinéma': TCM.fr
+  - 'TEBEO': Tebeo.fr
+  - 'TECH & CO': 01TV.fr
+  - 'TELE-VISION MONTREUIL': TVMEstParisien.fr
+  - 'TF1 + 1': TF1plus1.fr
+  - 'TIJI': TIJI.fr
+  - 'Tipik': LaDeux.be
+  - 'Tivi5': Tivi5.fr
+  - 'TL7': TL7SaintEtienne.fr
+  - 'TLC': DiscoveryScience.fr
+  - 'Top Santé TV': TopSanteTV.fr
+  - 'Toute l''Histoire': TouteHistoire.fr
+  - 'Trace Africa': TraceAfrica.fr
+  - 'TRACE CARIBBEAN': TraceCaribbean.fr
+  - 'Trace Latina': TraceLatina.fr
+  - 'Trace Toca': TraceToca.fr
+  - 'Trace Tropical': TraceTropical.fr
+  - 'Trace Urban': TraceUrban.fr
+  - 'TRACESportStars': TRACESportStars.fr
+  - 'TREK': Trek.fr
+  - 'TV Breizh': TvBreizh.fr
+  - 'TV Pitchoun': TVPitchoun.fr
+  - 'TV RENNES 35': TVRennes35Bretagne.fr
+  - 'TV Tours': TVTours.fr
+  - 'TV Vendée': TVVendee.fr
+  - 'TV2COM': TV2Com.fr
+  - 'TV5 Monde': TV5Monde.fr
+  - 'TV5 Monde Info': TV5MondeInfo.fr
+  - 'TV7 Bordeaux': TV7Bordeaux.fr
+  - 'TV78': TV78.fr
+  - 'TV8 Moselle-Est': TV8MoselleEst.fr
+  - 'TVPI': TVPI.fr
+  - 'TVSUDMarseille': TVSUDMarseille.fr
+  - 'TVSUDNimes': TVSUDNimes.fr
+  - 'TébéSud': TebeSud.fr
+  - 'Télé Grenoble': TeleGrenobleIsere.fr
+  - 'Télé Paese': TelePaese.fr
+  - 'Télénantes': Telenantes.fr
+  - 'Télésud': Telesud.fr
+  - 'Télétoon +1': TeleTOONplus1.fr
+  - 'TéléToon+': TeleToonPlus.fr
+  - 'Téva': Teva.fr
+  - 'UNION TV': UnionTV.fr
+  - 'Ushuaia TV': UshuaiaTV.fr
+  - 'VH1': VH1.fr
+  - 'VH1 Classic': VH1Classic.fr
+  - 'VIA Mirabelle': MirabelleTV.fr
+  - 'viaATV': viaATV.fr
+  - 'VISION': VISION.ca
+  - 'Vià MATÉLÉ': viaMaTele.fr
+  - 'Vosges tv': VosgesTV.fr
+  - 'Warner TV Next': Toonami.fr
+  - 'WarnerTV': WarnerTV.fr
+  - 'Wéo Picardie': WeoPicardie.fr
+  - 'Wéo TV, La voix du nord': Weo.fr
+  - 'XXL': XXL.fr
+  - 'ZOUK TV': ZoukTV.fr
+- keyname: mode
+  field_type: select
+  name: Affichage
+  description: Auto montre le programme en cours et le suivant, puis la soirée (première et seconde partie) de 18 h à 22 h.
+  options:
+  - Auto: auto
+  - En ce moment: now
+  - Ce soir: tonight
+  default: auto
+- keyname: about
+  field_type: author_bio
+  name: À propos
+  category: entertainment
+  github_url: https://github.com/rivallinkil/trmnl-tv-schedule
+  description: 'Le programme télé des chaînes françaises : ce qui passe en ce moment et ce qui suit, puis la soirée (première et seconde partie) à partir de 18 h. Choisissez jusqu’à 10 chaînes parmi les quelque 400 accessibles en France (TNT, câble, satellite, chaînes locales).<br><br>Données : <a href="https://xmltvfr.fr" class="underline" target="_blank">XML TV Fr</a>, réduites toutes les 3 heures par un relais sur GitHub Pages. Aucun compte ni clé d’API.<br><br>Code source, suggestions et bugs : <a href="https://github.com/rivallinkil/trmnl-tv-schedule" class="underline" target="_blank">GitHub</a>'
+name: Programme TV
+description: En ce moment et ce soir à la télé
+refresh_interval: 15

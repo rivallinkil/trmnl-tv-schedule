@@ -1,0 +1,11 @@
+# trmnlp build output
+_build/
+
+# trmnlp test --report output
+report/
+
+# Relay output, published by .github/workflows/relay.yml
+public/
+
+# Python bytecode from local transform runs
+__pycache__/
