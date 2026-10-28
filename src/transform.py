@@ -4,8 +4,9 @@ Picks, for each chosen channel, what to show: the programme on now and the next 
 Input: one relay file (relay/build.py) per chosen channel, {id, name, generated, programmes: [[start, stop, title,
 category], ...]}. TRMNL wraps several polling URLs as {IDX_0: first channel, IDX_1: ...}; a single URL arrives
 unwrapped. Plus the trmnl namespace with the custom field "mode".
-Output: {mode: "now" | "tonight", heading, updated, rows: [{name, a: slot, b: slot}]}, where a slot is
-{start, end, title, category, progress} (times as "21:10", progress in % for a programme on now, else None).
+Output: {mode: "now" | "tonight", heading, updated, rows: [{name, logo, a: slot, b: slot}]}, where a slot is
+{start, end, title, category, progress} (times as "21:10", progress in % for a programme on now, else None)
+and logo is the URL of the channel's logo, or None.
 """
 import time
 from datetime import datetime, timedelta, timezone
@@ -138,7 +139,8 @@ def run(input):
             a, b = now_next(progs, now)
             b = skip_short(progs, b)
         if a or b:
-            rows.append({"name": channel.get("name") or channel.get("id"), "a": slot(a, tz, now), "b": slot(b, tz, now)})
+            rows.append({"name": channel.get("name") or channel.get("id"), "logo": channel.get("logo"),
+                         "a": slot(a, tz, now), "b": slot(b, tz, now)})
 
     if mode == "tonight":
         heading = "Ce soir"

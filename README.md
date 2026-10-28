@@ -4,6 +4,7 @@ Le programme télé des chaînes françaises sur les écrans e-paper [TRMNL](htt
 
 ## Fonctionnalités
 
+- Le logo de chaque chaîne (ou son nom quand il n'y en a pas).
 - Jusqu'à 10 chaînes au choix parmi les quelque 400 accessibles en France : TNT, câble, satellite, chaînes locales, outre-mer, plus quelques chaînes belges et suisses.
 - Trois modes d'affichage :
   - **En ce moment** : le programme en cours, avec une barre de progression, et le suivant.
@@ -21,7 +22,8 @@ TRMNL refuse les réponses de plus de 100 Ko, et le guide pèse 73 Mo (9 Mo comp
 
 1. Toutes les 3 heures, une GitHub Action ([`.github/workflows/relay.yml`](.github/workflows/relay.yml)) télécharge le guide et le découpe en un petit fichier JSON par chaîne, limité aux 30 heures à venir (3 Ko en moyenne). Elle les publie sur GitHub Pages ([`relay/build.py`](relay/build.py)) :
    - `https://rivallinkil.github.io/trmnl-tv-schedule/channels.json` : la liste des chaînes ;
-   - `https://rivallinkil.github.io/trmnl-tv-schedule/c/<id>.json` : les programmes d'une chaîne, par exemple `c/TF1.fr.json`.
+   - `https://rivallinkil.github.io/trmnl-tv-schedule/c/<id>.json` : les programmes d'une chaîne, par exemple `c/TF1.fr.json` ;
+   - `https://rivallinkil.github.io/trmnl-tv-schedule/logos/<id>.png` : son logo, recadré, réduit et passé en niveaux de gris pour l'e-paper ([`relay/logos.py`](relay/logos.py)). Les logos sont gardés en cache entre deux passages : seuls les nouveaux ou ceux qui changent sont téléchargés. Une chaîne sans logo, ou dont le logo est partagé avec d'autres (les Eurosport 360, les Canal+ Live…), affiche son nom.
 2. TRMNL interroge uniquement les fichiers des chaînes choisies (une URL de polling par chaîne, construite en Liquid dans [`src/settings.yml`](src/settings.yml)).
 3. Un transform serverless choisit, pour chaque chaîne, le programme en cours et le suivant, ou la soirée ([`src/transform.py`](src/transform.py)). Il regroupe les épisodes consécutifs d'une même série et ignore les programmes courts (météo, tirages du loto, bandes-annonces).
 4. Les vues affichent le tout ([`src/shared.liquid`](src/shared.liquid)).
@@ -36,16 +38,16 @@ bin/trmnlp lint
 bin/trmnlp test
 ```
 
-Le relais ne demande que Python 3, sans dépendance :
+Le relais demande Python 3, et [Pillow](https://pypi.org/project/pillow/) pour les logos :
 
 ```sh
-python3 relay/build.py public                         # télécharge le guide et écrit public/
+python3 relay/build.py public --logos .cache/logos    # télécharge le guide et les logos, écrit public/
 python3 relay/update_settings.py public/channels.json # met à jour la liste des chaînes dans src/settings.yml
 ```
 
 La liste des chaînes proposées dans les réglages est figée dans `src/settings.yml`. Quand le guide ajoute ou retire des chaînes, relancez ces deux commandes et relisez le diff.
 
-Les tests utilisent les fichiers de 32 chaînes du mercredi 28 octobre 2026 ([`tests/fixtures/c`](tests/fixtures/c)), décalés au jour du test.
+Les tests utilisent les fichiers et les logos de 32 chaînes du mercredi 28 octobre 2026 ([`tests/fixtures`](tests/fixtures)), décalés au jour du test. Les logos y sont servis en local grâce à `asset_overrides` dans `.trmnlp.yml`.
 
 `bin/trmnlp login` et `bin/trmnlp push` envoient le plugin sur votre compte TRMNL.
 

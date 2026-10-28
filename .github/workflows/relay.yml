@@ -25,7 +25,16 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
-      - run: python3 relay/build.py public
+      - run: pip install pillow
+      - id: pages
+        uses: actions/configure-pages@v5
+      # The processed logos, so each run fetches only new or changed ones.
+      - uses: actions/cache@v4
+        with:
+          path: .cache/logos
+          key: logos-${{ github.run_id }}
+          restore-keys: logos-
+      - run: python3 relay/build.py public --logos .cache/logos --base-url "${{ steps.pages.outputs.base_url }}"
       - uses: actions/upload-pages-artifact@v4
         with:
           path: public

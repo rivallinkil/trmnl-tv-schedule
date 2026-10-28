@@ -9,3 +9,6 @@ public/
 
 # Python bytecode from local transform runs
 __pycache__/
+
+# Logo cache of local relay runs
+.cache/

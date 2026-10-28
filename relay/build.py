@@ -4,11 +4,13 @@ small JSON file per channel, which TRMNL polls (it rejects responses over 100 KB
 
 Runs on a schedule in GitHub Actions (.github/workflows/relay.yml), which publishes the output on GitHub Pages:
   channels.json   [{"id": "TF1.fr", "name": "TF1"}, ...]    TNT channels in channel-number order, then the rest by name
-  c/<id>.json     {"id", "name", "generated", "programmes": [[start, stop, title, category], ...]}   epoch seconds
+  c/<id>.json     {"id", "name", "logo", "generated", "programmes": [[start, stop, title, category], ...]}
+                  epoch seconds; "logo" is the URL of logos/<id>.png, or null
+  logos/<id>.png  the channel's logo, ready for e-paper (relay/logos.py)
 
 Only programmes still running or starting in the next WINDOW_HOURS are kept.
 
-  python3 relay/build.py public                                   # download and write
+  python3 relay/build.py public --logos .cache/logos --base-url https://rivallinkil.github.io/trmnl-tv-schedule
   python3 relay/build.py out --input xmltv_fr.xml.gz --now 1793142000 --only TF1.fr,Arte.fr   # test fixtures
 """
 import argparse
@@ -85,13 +87,15 @@ def epoch(stamp):
 
 
 def build(feed, now, hours):
-    """{id: name} and {id: [programme, ...]}, streaming through the feed (73 MB unpacked)."""
+    """{id: name}, {id: icon URL} and {id: [programme, ...]}, streaming through the feed (73 MB unpacked)."""
     end = now + hours * 3600
-    names, programmes = {}, {}
+    names, icons, programmes = {}, {}, {}
     for _, el in ET.iterparse(feed):
         if el.tag == "channel":
             cid = el.get("id")
             names[cid] = channel_name(cid, el.findtext("display-name"))
+            icon = el.find("icon")
+            icons[cid] = icon.get("src") if icon is not None else None
             programmes.setdefault(cid, [])
             el.clear()
         elif el.tag == "programme":
@@ -102,7 +106,7 @@ def build(feed, now, hours):
             el.clear()
     for rows in programmes.values():
         rows.sort()
-    return names, programmes
+    return names, icons, programmes
 
 
 def ordered(names):
@@ -122,11 +126,13 @@ def main():
     parser.add_argument("--now", type=int, help="epoch seconds the window starts at (default: now)")
     parser.add_argument("--hours", type=int, default=WINDOW_HOURS)
     parser.add_argument("--only", help="comma-separated channel ids to write (test fixtures)")
+    parser.add_argument("--logos", metavar="CACHE_DIR", help="fetch the logos, kept in CACHE_DIR between runs")
+    parser.add_argument("--base-url", help="where the output is published, for the logo URLs")
     args = parser.parse_args()
 
     now = args.now or int(time.time())
     with open_feed(args.input) as feed:
-        names, programmes = build(feed, now, args.hours)
+        names, icons, programmes = build(feed, now, args.hours)
     total = sum(len(r) for r in programmes.values())
     if total == 0:
         sys.exit("no programmes in the window: is the feed outdated?")
@@ -137,8 +143,22 @@ def main():
     ids = ordered(names)
     if args.only:
         ids = [c for c in ids if c in args.only.split(",")]
+
+    with_logo = set()
+    shutil.rmtree(out / "logos", ignore_errors=True)
+    if args.logos:
+        import logos  # Pillow, only needed here
+
+        with_logo = logos.unique(logos.update({c: icons.get(c) for c in ids}, args.logos), args.logos)
+        (out / "logos").mkdir()
+        for cid in with_logo:
+            shutil.copy(Path(args.logos) / f"{cid}.png", out / "logos" / f"{cid}.png")
+    base_url = (args.base_url or "").rstrip("/")
+
     for cid in ids:
-        data = dump({"id": cid, "name": names[cid], "generated": now, "programmes": programmes.get(cid, [])})
+        logo = f"{base_url}/logos/{cid}.png" if cid in with_logo else None
+        data = dump({"id": cid, "name": names[cid], "logo": logo, "generated": now,
+                     "programmes": programmes.get(cid, [])})
         if len(data) > MAX_BYTES:
             sys.exit(f"{cid}: {len(data)} bytes, over the {MAX_BYTES} limit")
         (out / "c" / f"{cid}.json").write_bytes(data)

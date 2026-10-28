@@ -16,3 +16,7 @@ time_zone: Paris
 # override variables
 variables:
   trmnl: {}
+
+# The logos of the test fixtures, in place of the published ones (relay/build.py --logos)
+asset_overrides:
+  https://rivallinkil.github.io/trmnl-tv-schedule/logos/: tests/fixtures/logos
