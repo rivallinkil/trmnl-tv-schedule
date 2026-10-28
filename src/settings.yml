@@ -6,10 +6,10 @@ static_data: ''
 polling_verb: get
 framework_version: latest
 serverless_language: python
-refresh_interval_floor:
+refresh_interval_floor: ''
 polling_url: "{%- assign tv_ids = channels | join: \",\" | split: \",\" -%}{%- if tv_ids.size == 0 -%}{%- assign tv_ids = \"TF1.fr,France2.fr,France3.fr,CanalPlus.fr,France5.fr,M6.fr,Arte.fr\" | split: \",\" -%}{%- endif -%}{% capture tv_nl %}\r\n{% endcapture %}{%- for tv_id in tv_ids limit: 10 -%}{%- unless forloop.first -%}{{ tv_nl }}{%- endunless -%}https://rivallinkil.github.io/trmnl-tv-schedule/c/{{ tv_id | strip }}.json{%- endfor -%}"
-polling_headers:
-polling_body:
+polling_headers: ''
+polling_body: ''
 id: 522713
 oauth_enabled: 'false'
 oauth_pkce_enabled: 'no'
